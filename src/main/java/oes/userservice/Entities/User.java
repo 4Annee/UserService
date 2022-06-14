@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
+@Table(name = "user",schema = "mainschema")
 public class User {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -26,11 +27,9 @@ public class User {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private StudyGroup studygroup;
+    private StudyGroup group;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "teachers")
-    @JoinTable(name = "user_teaching_modules",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "teaching_modules_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Module> modules;
 }

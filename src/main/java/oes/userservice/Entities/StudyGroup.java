@@ -10,15 +10,16 @@ import java.util.List;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 @Entity
+@Table(name = "studygroup",schema = "mainschema")
 public class StudyGroup {
     @EmbeddedId
     private CompositeKeyGroup id;
 
-    @OneToMany(mappedBy = "studygroup")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "group")
     private List<User> students;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "studyGroups")
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Module> studyModules;
 
     @Transient

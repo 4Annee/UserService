@@ -11,13 +11,9 @@ import oes.userservice.Repositories.ModuleRepository;
 import oes.userservice.Repositories.StudyGroupRepository;
 import oes.userservice.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/User")
@@ -34,17 +30,11 @@ public class UsersController {
         List<User> users = repo.findUsersByEmail(login.getEmail());
         if(users.get(0).getPassword() == login.getPassword()){
             User user1 = users.get(0);
-            return new UserDTO(user1.getId(),user1.getRole(),user1.getStudygroup().getId().getYear(),
-                    user1.getStudygroup().getId().getSection(),user1.getStudygroup().getId().getGroup());
+            return new UserDTO(user1.getId(),user1.getRole(),user1.getGroup().getId().getYear(),
+                    user1.getGroup().getId().getSection(),user1.getGroup().getId().getGroup());
         }
         return null;
     }
-
-//    No Getting all users
-//    GET "/:id" get user by id
-//    GET "/module/:id" get users studying module
-//    GET "/group/:id" get users by group id ….. same for /Section and /year
-//    POST "/" add, PUT "/:id" Update, DELETE "/:id" delete
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable("id")String id){
@@ -67,7 +57,7 @@ public class UsersController {
     }
     @GetMapping("/year/{year}/section/{section}/group/{group}")
     public StudyGroup getUsersByModuleId(@PathVariable("year")int year,@PathVariable("section")String section,@PathVariable("group")int group){
-        return srepo.findStudyGroupByIdYearAndIdSectionAndIdGroup(year,section,group);
+        return srepo.findById(new CompositeKeyGroup(year,section,group)).get();
     }
 
     @PostMapping("/")
